@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface AccountTypeService {
     List<AccountTypeDto> findAll();
+
+    AccountTypeDto create(AccountTypeDto accountTypeDto);
 }

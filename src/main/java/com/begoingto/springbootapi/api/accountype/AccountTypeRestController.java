@@ -3,9 +3,7 @@ package com.begoingto.springbootapi.api.accountype;
 import com.begoingto.springbootapi.base.BaseRest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,5 +23,12 @@ public class AccountTypeRestController {
                 .timestamp(LocalDateTime.now())
                 .data(accounts)
                 .build();
+    }
+
+    @PostMapping
+    public AccountTypeDto create(@RequestBody AccountTypeDto accountTypeDto){
+        var account = accountTypeService.create(accountTypeDto);
+        System.out.println(account);
+        return accountTypeDto;
     }
 }

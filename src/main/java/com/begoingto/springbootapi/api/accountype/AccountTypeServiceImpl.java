@@ -21,4 +21,10 @@ public class AccountTypeServiceImpl implements AccountTypeService{
 
         return accountTypeMapStruct.toDto(accountTypes);
     }
+
+    @Override
+    public AccountTypeDto create(AccountTypeDto accountTypeDto) {
+        AccountType accountType = accountTypeMapper.create(accountTypeDto);
+        return accountTypeMapStruct.toDto(accountType);
+    }
 }
