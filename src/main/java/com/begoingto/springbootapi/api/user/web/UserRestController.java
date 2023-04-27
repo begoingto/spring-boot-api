@@ -6,10 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -29,6 +26,18 @@ public class UserRestController {
                 .status(true)
                 .code(HttpStatus.OK.value())
                 .message("User have been created successfully.")
+                .timestamp(LocalDateTime.now())
+                .data(userDto)
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    BaseRest<?> findUserById(@PathVariable Integer id){
+        UserDto userDto = userService.findUserById(id);
+        return BaseRest.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("User have been find successfully.")
                 .timestamp(LocalDateTime.now())
                 .data(userDto)
                 .build();

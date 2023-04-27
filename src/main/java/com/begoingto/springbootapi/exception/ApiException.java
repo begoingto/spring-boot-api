@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
@@ -38,6 +39,20 @@ public class ApiException {
                 .message("Validation is error, please check detail message!")
                 .timestamp(LocalDateTime.now())
                 .errors(errors)
+                .build();
+    }
+
+
+    @ExceptionHandler(ResponseStatusException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public BaseError<?> handleServiceException(ResponseStatusException e){
+
+        return BaseError.builder()
+                .status(false)
+                .code(e.getStatusCode().value())
+                .message("Something when wrong...!, please check.")
+                .timestamp(LocalDateTime.now())
+                .errors(e.getReason())
                 .build();
     }
 }

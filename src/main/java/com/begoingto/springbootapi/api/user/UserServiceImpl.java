@@ -4,7 +4,9 @@ import com.begoingto.springbootapi.api.user.web.CreateUserDto;
 import com.begoingto.springbootapi.api.user.web.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +24,19 @@ public class UserServiceImpl implements UserService{
         userMapper.insert(user);
 
         log.info("User = {}",user.getId());
+        System.out.println("User ID: "+ user.getId());
+        return this.findUserById(user.getId());
+    }
+
+    @Override
+    public UserDto findUserById(Integer id) {
+        User user  = userMapper.selectById(id).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("User with id=%d is not found.",id)
+                        )
+        );
+
         return userMapStruct.userToUserDto(user);
     }
 }
