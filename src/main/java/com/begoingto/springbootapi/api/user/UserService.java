@@ -9,4 +9,7 @@ public interface UserService {
 
     UserDto findUserById(Integer id);
 
+    Integer deleteUserById(Integer id);
+
+    Integer updateIsDeletedStatus(Integer id,boolean status);
 }

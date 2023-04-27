@@ -2,7 +2,6 @@ package com.begoingto.springbootapi.api.user;
 
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 
 @Repository
@@ -19,4 +18,12 @@ public interface UserMapper {
     @Result(column = "is_student",property = "isStudent")
     Optional<User> selectById(Integer id);
 
+    @Select("SELECT EXISTS(SELECT * FROM users WHERE id=#{id})")
+    boolean existUserById(@Param("id") Integer id);
+
+    @DeleteProvider(type = UserProvider.class, method = "buildDeleteByIdSql")
+    void deleteById(Integer id);
+
+    @UpdateProvider(type = UserProvider.class,method = "buildUpdateIsDeletedById")
+    void updateIsDeletedById(@Param("id") Integer id, @Param("status") boolean status);
 }

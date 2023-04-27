@@ -37,9 +37,37 @@ public class UserRestController {
         return BaseRest.builder()
                 .status(true)
                 .code(HttpStatus.OK.value())
-                .message("User have been find successfully.")
+                .message("User have been found successfully.")
                 .timestamp(LocalDateTime.now())
                 .data(userDto)
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    BaseRest<?> deleteUserById(@PathVariable Integer id){
+
+        Integer userId = userService.deleteUserById(id);
+
+        return BaseRest.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("User have been deleted successfully.")
+                .timestamp(LocalDateTime.now())
+                .data(userId)
+                .build();
+    }
+
+    @PutMapping("/{id}")
+    BaseRest<?> updateIsDeletedById(@PathVariable Integer id,@RequestBody IsDeletedDto isDeletedDto){
+
+        Integer userId = userService.updateIsDeletedStatus(id, isDeletedDto.status());
+
+        return BaseRest.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("User have been updated status successfully.")
+                .timestamp(LocalDateTime.now())
+                .data(userId)
                 .build();
     }
 }
