@@ -31,7 +31,8 @@ public class UserProvider {
     public String buildUpdateSql(){
         return new  SQL(){{
             UPDATE(table);
-            SET("name=#{u.name}","gender=#{u.gender}");
+            SET("name=#{u.name}");
+            SET("gender=#{u.gender}");
             WHERE("id = #{u.id}");
         }}.toString();
     }

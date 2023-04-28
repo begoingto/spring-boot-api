@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService{
             User user  = userMapStruct.userUpdateDtoToUser(updateUserDto);
             user.setId(id);
             userMapper.updateById(user);
-            return userMapStruct.userToUserDto(user);
+            return this.findUserById(id);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND,String.format("User with id=%d is not found.",id));
     }

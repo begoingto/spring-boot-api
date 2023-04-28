@@ -62,7 +62,7 @@ public class UserRestController {
 
 
     @PutMapping("/{id}")
-    public BaseRest<?> updateUser(@PathVariable Integer id, UpdateUserDto updateUserDto){
+    public BaseRest<?> updateUser(@PathVariable Integer id,@RequestBody UpdateUserDto updateUserDto){
         UserDto userDto = userService.updateUserById(id,updateUserDto);
         return BaseRest.builder()
                 .status(true)
