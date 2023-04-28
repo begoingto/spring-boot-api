@@ -2,6 +2,7 @@ package com.begoingto.springbootapi.api.user.web;
 
 import com.begoingto.springbootapi.api.user.UserService;
 import com.begoingto.springbootapi.base.BaseRest;
+import com.github.pagehelper.PageInfo;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,22 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class UserRestController {
     private final UserService userService;
+
+    @GetMapping
+    public  BaseRest<?> findAllUser(
+            @RequestParam(name = "page",required = false,defaultValue = "1") int page,
+            @RequestParam(name = "limit",required = false,defaultValue = "5") int limit
+    ){
+        PageInfo<UserDto> userDtoPageInfo = userService.findAllUser(page, limit);
+
+        return BaseRest.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("User have been get successfully.")
+                .timestamp(LocalDateTime.now())
+                .data(userDtoPageInfo)
+                .build();
+    }
 
     @PostMapping
     BaseRest<?> createUser(@RequestBody @Valid CreateUserDto createUserDto){

@@ -2,6 +2,9 @@ package com.begoingto.springbootapi.api.user;
 
 import com.begoingto.springbootapi.api.user.web.CreateUserDto;
 import com.begoingto.springbootapi.api.user.web.UserDto;
+import com.github.pagehelper.ISelect;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,6 +17,14 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserServiceImpl implements UserService{
     private final UserMapper userMapper;
     private final UserMapStruct userMapStruct;
+
+    @Override
+    public PageInfo<UserDto> findAllUser(int page, int limit) {
+
+         PageInfo<User> userPageInfo = PageHelper.startPage(page, limit).doSelectPageInfo(userMapper::select);
+
+        return userMapStruct.userPageInfoToUserDtoPageInfo(userPageInfo);
+    }
 
     @Override
     public UserDto createNewUser(CreateUserDto createUserDto) {

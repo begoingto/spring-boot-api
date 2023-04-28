@@ -5,6 +5,17 @@ import org.apache.ibatis.jdbc.SQL;
 public class UserProvider {
     private final String table = "users";
 
+
+    public String buildSelectSql(){
+        return new SQL(){{
+            SELECT("*");
+            FROM(table);
+            WHERE("is_deleted = FALSE");
+            ORDER_BY("id DESC");
+        }}.toString();
+    }
+
+
     public String buildInsertSql() {
         return new SQL(){{
             INSERT_INTO(table);
