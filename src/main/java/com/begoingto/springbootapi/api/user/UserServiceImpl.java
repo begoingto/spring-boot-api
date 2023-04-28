@@ -1,6 +1,7 @@
 package com.begoingto.springbootapi.api.user;
 
 import com.begoingto.springbootapi.api.user.web.CreateUserDto;
+import com.begoingto.springbootapi.api.user.web.UpdateUserDto;
 import com.begoingto.springbootapi.api.user.web.UserDto;
 import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
@@ -40,12 +41,24 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public UserDto updateUserById(Integer id, UpdateUserDto updateUserDto) {
+
+        if (userMapper.existUserById(id)){
+            User user  = userMapStruct.userUpdateDtoToUser(updateUserDto);
+            user.setId(id);
+            userMapper.updateById(user);
+            return userMapStruct.userToUserDto(user);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND,String.format("User with id=%d is not found.",id));
+    }
+
+    @Override
     public UserDto findUserById(Integer id) {
         User user  = userMapper.selectById(id).orElseThrow(
                 () -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         String.format("User with id=%d is not found.",id)
-                        )
+                )
         );
 
         return userMapStruct.userToUserDto(user);

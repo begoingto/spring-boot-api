@@ -28,6 +28,14 @@ public class UserProvider {
         }}.toString();
     }
 
+    public String buildUpdateSql(){
+        return new  SQL(){{
+            UPDATE(table);
+            SET("name=#{u.name}","gender=#{u.gender}");
+            WHERE("id = #{u.id}");
+        }}.toString();
+    }
+
     public String buildSelectByIdSql(){
         return new SQL(){{
             SELECT("*");

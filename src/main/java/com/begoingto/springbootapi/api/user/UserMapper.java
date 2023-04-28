@@ -18,6 +18,8 @@ public interface UserMapper {
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
     void insert(@Param("u") User user);
 
+    @UpdateProvider(type = UserProvider.class,method = "buildUpdateSql")
+    void updateById(@Param("u") User user);
 
     @SelectProvider(type = UserProvider.class, method = "buildSelectByIdSql")
 //    @Result(column = "student_card_id",property = "studentCardId")

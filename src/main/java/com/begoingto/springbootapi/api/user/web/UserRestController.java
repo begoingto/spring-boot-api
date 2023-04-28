@@ -60,6 +60,19 @@ public class UserRestController {
                 .build();
     }
 
+
+    @PutMapping("/{id}")
+    public BaseRest<?> updateUser(@PathVariable Integer id, UpdateUserDto updateUserDto){
+        UserDto userDto = userService.updateUserById(id,updateUserDto);
+        return BaseRest.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("User have been update successfully.")
+                .timestamp(LocalDateTime.now())
+                .data(userDto)
+                .build();
+    }
+
     @DeleteMapping("/{id}")
     BaseRest<?> deleteUserById(@PathVariable Integer id){
 
@@ -74,7 +87,7 @@ public class UserRestController {
                 .build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/is-delete")
     BaseRest<?> updateIsDeletedById(@PathVariable Integer id,@RequestBody IsDeletedDto isDeletedDto){
 
         Integer userId = userService.updateIsDeletedStatus(id, isDeletedDto.status());
