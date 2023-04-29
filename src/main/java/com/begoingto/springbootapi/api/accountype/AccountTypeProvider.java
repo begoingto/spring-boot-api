@@ -1,5 +1,6 @@
 package com.begoingto.springbootapi.api.accountype;
 
+import com.begoingto.springbootapi.api.accountype.web.AccountTypeDto;
 import org.apache.ibatis.jdbc.SQL;
 
 public class AccountTypeProvider {
@@ -11,12 +12,10 @@ public class AccountTypeProvider {
         }}.toString();
     }
 
-    public String buildCreateSql(AccountTypeDto accountTypeDto){
-        String name = accountTypeDto.name();
+    public String buildCreateSql(){
         return new SQL(){{
             INSERT_INTO(table);
-            INTO_COLUMNS("name");
-            INTO_VALUES("#{name}");
+            VALUES("name","#{act.name}");
         }}.toString();
     }
 }

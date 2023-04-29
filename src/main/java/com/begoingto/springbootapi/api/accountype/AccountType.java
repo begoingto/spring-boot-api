@@ -1,13 +1,11 @@
 package com.begoingto.springbootapi.api.accountype;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class AccountType {
     private Integer id;
     private String name;
+    private Boolean isDeleted;
 }

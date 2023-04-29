@@ -1,5 +1,6 @@
 package com.begoingto.springbootapi.api.accountype;
 
+import com.begoingto.springbootapi.api.accountype.web.AccountTypeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,9 @@ public class AccountTypeServiceImpl implements AccountTypeService{
 
     @Override
     public AccountTypeDto create(AccountTypeDto accountTypeDto) {
-        AccountType accountType = accountTypeMapper.create(accountTypeDto);
+        AccountType accountType = accountTypeMapStruct.toDto(accountTypeDto);
+        accountTypeMapper.create(accountType);
+        System.out.println(accountType);
         return accountTypeMapStruct.toDto(accountType);
     }
 }

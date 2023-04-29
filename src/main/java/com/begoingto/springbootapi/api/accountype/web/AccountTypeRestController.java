@@ -1,12 +1,12 @@
-package com.begoingto.springbootapi.api.accountype;
+package com.begoingto.springbootapi.api.accountype.web;
 
+import com.begoingto.springbootapi.api.accountype.AccountTypeService;
 import com.begoingto.springbootapi.base.BaseRest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/account-types")
@@ -26,9 +26,14 @@ public class AccountTypeRestController {
     }
 
     @PostMapping
-    public AccountTypeDto create(@RequestBody AccountTypeDto accountTypeDto){
-        var account = accountTypeService.create(accountTypeDto);
-        System.out.println(account);
-        return accountTypeDto;
+    public BaseRest<?> create(@RequestBody AccountTypeDto accountTypeDto){
+        AccountTypeDto account = accountTypeService.create(accountTypeDto);
+        return BaseRest.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("User have been found successfully.")
+                .timestamp(LocalDateTime.now())
+                .data(account)
+                .build();
     }
 }

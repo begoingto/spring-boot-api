@@ -4,7 +4,6 @@ import com.begoingto.springbootapi.api.user.web.CreateUserDto;
 import com.begoingto.springbootapi.api.user.web.Filters;
 import com.begoingto.springbootapi.api.user.web.UpdateUserDto;
 import com.begoingto.springbootapi.api.user.web.UserDto;
-import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j

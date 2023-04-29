@@ -1,6 +1,6 @@
 package com.begoingto.springbootapi.api.accountype;
 
-import org.springframework.stereotype.Service;
+import com.begoingto.springbootapi.api.accountype.web.AccountTypeDto;
 
 import java.util.List;
 

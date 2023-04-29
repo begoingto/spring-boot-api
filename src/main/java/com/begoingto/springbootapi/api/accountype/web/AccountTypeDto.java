@@ -1,4 +1,4 @@
-package com.begoingto.springbootapi.api.accountype;
+package com.begoingto.springbootapi.api.accountype.web;
 
 import lombok.Builder;
 
