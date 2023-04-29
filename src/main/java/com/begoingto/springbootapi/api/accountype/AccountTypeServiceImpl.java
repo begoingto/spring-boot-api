@@ -41,4 +41,29 @@ public class AccountTypeServiceImpl implements AccountTypeService{
         );
         return accountTypeMapStruct.toDto(accountType);
     }
+
+    @Override
+    public AccountTypeDto updateUserById(Integer id, AccountTypeDto accountTypeDto) {
+        if (accountTypeMapper.existUserById(id)){
+            AccountType accountType  = accountTypeMapStruct.toDto(accountTypeDto);
+            accountType.setId(id);
+            accountTypeMapper.updateById(accountType);
+            return this.findById(id);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND,String.format("User with id=%d is not found.",id));
+    }
+
+    @Override
+    public AccountTypeDto updateById(Integer id, AccountTypeDto accountTypeDto) {
+        return null;
+    }
+
+    @Override
+    public Integer deleteById(Integer id) {
+        if (accountTypeMapper.existUserById(id)){
+            accountTypeMapper.deleteById(id);
+            return id;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND,String.format("account Type with id=%d is not found.",id));
+    }
 }

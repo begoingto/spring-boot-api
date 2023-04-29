@@ -1,5 +1,7 @@
 package com.begoingto.springbootapi.api.accountype;
 
+import com.begoingto.springbootapi.api.user.User;
+import com.begoingto.springbootapi.api.user.UserProvider;
 import org.apache.ibatis.annotations.*;
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +22,13 @@ public interface AccountTypeMapper {
             @Result(column = "name",property = "name")
     })
     Optional<AccountType> selectById(Integer id);
+
+    @UpdateProvider(type = AccountTypeProvider.class,method = "buildUpdateSql")
+    void updateById(@Param("act") AccountType accountType);
+
+    @Select("SELECT EXISTS(SELECT * FROM account_types WHERE id=#{id} AND is_deleted = FALSE)")
+    boolean existUserById(@Param("id") Integer id);
+
+    @DeleteProvider(type = AccountTypeProvider.class, method = "buildDeleteByIdSql")
+    void deleteById(Integer id);
 }

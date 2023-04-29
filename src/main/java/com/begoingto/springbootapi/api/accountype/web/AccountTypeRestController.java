@@ -1,6 +1,8 @@
 package com.begoingto.springbootapi.api.accountype.web;
 
 import com.begoingto.springbootapi.api.accountype.AccountTypeService;
+import com.begoingto.springbootapi.api.user.web.UpdateUserDto;
+import com.begoingto.springbootapi.api.user.web.UserDto;
 import com.begoingto.springbootapi.base.BaseRest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -48,9 +50,33 @@ public class AccountTypeRestController {
         return BaseRest.builder()
                 .status(true)
                 .code(HttpStatus.OK.value())
-                .message("User have been found successfully.")
+                .message("Account type have been found successfully.")
                 .timestamp(LocalDateTime.now())
                 .data(accountTypeDto)
+                .build();
+    }
+
+    @PutMapping("/{id}")
+    public BaseRest<?> updateUser(@PathVariable Integer id,@RequestBody AccountTypeDto accountTypeDto){
+        AccountTypeDto account = accountTypeService.updateUserById(id,accountTypeDto);
+        return BaseRest.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("Account type have been update successfully.")
+                .timestamp(LocalDateTime.now())
+                .data(account)
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    public BaseRest<?> deleteById(@PathVariable int id){
+        Integer actId = accountTypeService.deleteById(id);
+        return BaseRest.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("Account Type have been deleted successfully.")
+                .timestamp(LocalDateTime.now())
+                .data(actId)
                 .build();
     }
 }

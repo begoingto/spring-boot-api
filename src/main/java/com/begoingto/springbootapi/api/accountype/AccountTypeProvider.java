@@ -9,6 +9,7 @@ public class AccountTypeProvider {
         return new SQL() {{
             SELECT("*");
             FROM(table);
+            WHERE("is_deleted = FALSE");
         }}.toString();
     }
 
@@ -23,6 +24,22 @@ public class AccountTypeProvider {
         return new SQL(){{
             SELECT("*");
             FROM(table);
+            WHERE("id = #{id}","is_deleted = FALSE");
+        }}.toString();
+    }
+
+    public String buildUpdateSql(){
+        return new  SQL(){{
+            UPDATE(table);
+            SET("name=#{act.name}");
+            WHERE("id = #{act.id}");
+        }}.toString();
+    }
+
+    public String buildDeleteByIdSql(){
+        return new SQL(){{
+            UPDATE(table);
+            SET("is_deleted = TRUE");
             WHERE("id = #{id}");
         }}.toString();
     }
