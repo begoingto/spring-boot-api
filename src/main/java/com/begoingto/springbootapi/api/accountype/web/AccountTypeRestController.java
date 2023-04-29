@@ -34,9 +34,23 @@ public class AccountTypeRestController {
         return BaseRest.builder()
                 .status(true)
                 .code(HttpStatus.OK.value())
-                .message("User have been found successfully.")
+                .message("Account have been create successfully.")
                 .timestamp(LocalDateTime.now())
                 .data(account)
+                .build();
+    }
+
+
+
+    @GetMapping("/{id}")
+    public BaseRest<?> selectById(@PathVariable int id){
+        AccountTypeDto accountTypeDto = accountTypeService.findById(id);
+        return BaseRest.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("User have been found successfully.")
+                .timestamp(LocalDateTime.now())
+                .data(accountTypeDto)
                 .build();
     }
 }

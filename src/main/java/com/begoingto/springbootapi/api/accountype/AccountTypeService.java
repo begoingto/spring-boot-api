@@ -9,4 +9,6 @@ public interface AccountTypeService {
     PageInfo<AccountTypeDto> findAll(int page,int limit);
 
     AccountTypeDto create(AccountTypeDto accountTypeDto);
+
+    AccountTypeDto findById(Integer id);
 }

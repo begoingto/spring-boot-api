@@ -18,4 +18,12 @@ public class AccountTypeProvider {
             VALUES("name","#{act.name}");
         }}.toString();
     }
+
+    public String selectById(){
+        return new SQL(){{
+            SELECT("*");
+            FROM(table);
+            WHERE("id = #{id}");
+        }}.toString();
+    }
 }
