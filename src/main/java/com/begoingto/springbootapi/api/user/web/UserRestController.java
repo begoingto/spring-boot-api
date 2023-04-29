@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 
 @RestController
@@ -21,9 +20,10 @@ public class UserRestController {
     @GetMapping
     public  BaseRest<?> findAllUser(
             @RequestParam(name = "page",required = false,defaultValue = "1") int page,
-            @RequestParam(name = "limit",required = false,defaultValue = "5") int limit
+            @RequestParam(name = "limit",required = false,defaultValue = "15") int limit,
+            @RequestParam(name = "name",required = false,defaultValue = "") Filters filters
     ){
-        PageInfo<UserDto> userDtoPageInfo = userService.findAllUser(page, limit);
+        PageInfo<UserDto> userDtoPageInfo = userService.findAllUser(page, limit, filters);
 
         return BaseRest.builder()
                 .status(true)
@@ -51,6 +51,18 @@ public class UserRestController {
     @GetMapping("/{id}")
     BaseRest<?> findUserById(@PathVariable Integer id){
         UserDto userDto = userService.findUserById(id);
+        return BaseRest.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("User have been found successfully.")
+                .timestamp(LocalDateTime.now())
+                .data(userDto)
+                .build();
+    }
+
+    @GetMapping("/{stdId}/student-card-id")
+    BaseRest<?> findUserById(@PathVariable String stdId){
+        UserDto userDto = userService.findUserByStudentCardId(stdId);
         return BaseRest.builder()
                 .status(true)
                 .code(HttpStatus.OK.value())

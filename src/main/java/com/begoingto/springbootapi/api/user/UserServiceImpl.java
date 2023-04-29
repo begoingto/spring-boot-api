@@ -1,6 +1,7 @@
 package com.begoingto.springbootapi.api.user;
 
 import com.begoingto.springbootapi.api.user.web.CreateUserDto;
+import com.begoingto.springbootapi.api.user.web.Filters;
 import com.begoingto.springbootapi.api.user.web.UpdateUserDto;
 import com.begoingto.springbootapi.api.user.web.UserDto;
 import com.github.pagehelper.ISelect;
@@ -12,6 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -20,9 +25,10 @@ public class UserServiceImpl implements UserService{
     private final UserMapStruct userMapStruct;
 
     @Override
-    public PageInfo<UserDto> findAllUser(int page, int limit) {
-
-         PageInfo<User> userPageInfo = PageHelper.startPage(page, limit).doSelectPageInfo(userMapper::select);
+    public PageInfo<UserDto> findAllUser(int page, int limit, Filters filters) {
+        PageInfo<User> userPageInfo = PageHelper.startPage(page, limit).doSelectPageInfo(() -> {
+             userMapper.select(filters);
+         });
 
         return userMapStruct.userPageInfoToUserDtoPageInfo(userPageInfo);
     }
@@ -82,5 +88,17 @@ public class UserServiceImpl implements UserService{
             return id;
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND,String.format("User with id=%d is not found.",id));
+    }
+
+    @Override
+    public UserDto findUserByStudentCardId(String studentCardId) {
+        User user  = userMapper.selectByStdId(studentCardId.toLowerCase()).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("User with %s is not found.",studentCardId)
+                )
+        );
+
+        return userMapStruct.userToUserDto(user);
     }
 }

@@ -1,16 +1,24 @@
 package com.begoingto.springbootapi.api.user;
 
+import com.begoingto.springbootapi.api.user.web.Filters;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
+
+import java.util.Map;
+import java.util.Objects;
 
 public class UserProvider {
     private final String table = "users";
 
 
-    public String buildSelectSql(){
+    public String buildSelectSql(@Param("f") Filters filters){
         return new SQL(){{
             SELECT("*");
             FROM(table);
             WHERE("is_deleted = FALSE");
+            if (!filters.name().isEmpty()){
+                WHERE("name ILIKE CONCAT('%', #{f.name}, '%')");
+            }
             ORDER_BY("id DESC");
         }}.toString();
     }
@@ -42,6 +50,14 @@ public class UserProvider {
             SELECT("*");
             FROM(table);
             WHERE("id = #{id}", "is_deleted = FALSE");
+        }}.toString();
+    }
+
+    public String buildSelectByStudentCardIdSql(){
+        return new SQL(){{
+            SELECT("*");
+            FROM(table);
+            WHERE("LOWER(student_card_id) = #{stdId}", "is_deleted = FALSE");
         }}.toString();
     }
 

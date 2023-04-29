@@ -1,9 +1,11 @@
 package com.begoingto.springbootapi.api.user;
 
+import com.begoingto.springbootapi.api.user.web.Filters;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -12,7 +14,7 @@ public interface UserMapper {
 
     @SelectProvider(type = UserProvider.class, method = "buildSelectSql")
     @ResultMap("userResultMap")
-    List<User> select();
+    List<User> select(@Param("f") Filters filters);
 
     @InsertProvider(type = UserProvider.class,method = "buildInsertSql")
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
@@ -29,6 +31,10 @@ public interface UserMapper {
             @Result(column = "is_student",property = "isStudent")
     })
     Optional<User> selectById(Integer id);
+
+    @SelectProvider(type = UserProvider.class, method = "buildSelectByStudentCardIdSql")
+    @ResultMap("userResultMap")
+    Optional<User> selectByStdId(String stdId);
 
     @Select("SELECT EXISTS(SELECT * FROM users WHERE id=#{id})")
     boolean existUserById(@Param("id") Integer id);
