@@ -1,6 +1,8 @@
 package com.begoingto.springbootapi.api.accountype;
 
 import com.begoingto.springbootapi.api.accountype.web.AccountTypeDto;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,14 +15,9 @@ public class AccountTypeServiceImpl implements AccountTypeService{
     private final AccountTypeMapStruct accountTypeMapStruct;
 
     @Override
-    public List<AccountTypeDto> findAll() {
-
-        List<AccountType> accountTypes = accountTypeMapper.select();
-        /*List<AccountTypeDto> accountTypeDtoList = accountTypes.stream()
-                .map(accountType -> new AccountTypeDto(accountType.getName()))
-                .toList();*/
-
-        return accountTypeMapStruct.toDto(accountTypes);
+    public PageInfo<AccountTypeDto> findAll(int page,int limit) {
+        PageInfo<AccountType> accountTypePageInfo = PageHelper.startPage(page,limit).doSelectPageInfo(accountTypeMapper::select);
+        return accountTypeMapStruct.toDto(accountTypePageInfo);
     }
 
     @Override

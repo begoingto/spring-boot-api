@@ -14,8 +14,11 @@ import java.time.LocalDateTime;
 public class AccountTypeRestController {
     private final AccountTypeService accountTypeService;
     @GetMapping
-    public BaseRest<?> findAll(){
-        var accounts = accountTypeService.findAll();
+    public BaseRest<?> findAll(
+            @RequestParam(value = "page",defaultValue = "1") int page,
+            @RequestParam(value = "limit",defaultValue = "15") int limit
+    ){
+        var accounts = accountTypeService.findAll(page, limit);
         return BaseRest.builder()
                 .status(true)
                 .code(HttpStatus.OK.value())
