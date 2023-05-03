@@ -16,7 +16,7 @@ public class AccountServiceImpl implements AccountService{
     @Override
     public PageInfo<AccountDto> getAll(int page, int limit) {
 
-        PageInfo<Account> accountPageInfo = PageHelper.startPage(page,limit).doSelectPageInfo(accountMapper::select);
+        PageInfo<Account> accountPageInfo = PageHelper.startPage(page,limit).doSelectPageInfo(accountMapper::selectAccounts);
 
         return accountMapStruct.accountsToAccountDtoPageInfo(accountPageInfo);
     }

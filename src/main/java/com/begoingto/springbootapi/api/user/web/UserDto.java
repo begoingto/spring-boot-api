@@ -1,6 +1,6 @@
 package com.begoingto.springbootapi.api.user.web;
 
-import com.begoingto.springbootapi.api.account.Account;
+import com.begoingto.springbootapi.api.account.web.AccountDto;
 
 import java.util.List;
 
@@ -10,6 +10,6 @@ public record UserDto(
         String gender,
         String studentCardId,
         Boolean isStudent,
-        List<Account> accounts
+        List<AccountDto> accounts
 ) {
 }

@@ -1,6 +1,7 @@
 package com.begoingto.springbootapi.api.account.web;
 
 import com.begoingto.springbootapi.api.accountype.AccountType;
+import com.begoingto.springbootapi.api.accountype.web.AccountTypeDto;
 
 public record AccountDto(
         Integer id,
@@ -9,6 +10,6 @@ public record AccountDto(
         String profile,
         String phoneNumber,
         Integer transferLimit,
-        AccountType accountType
+        AccountTypeDto accountType
 ) {
 }
