@@ -1,9 +1,12 @@
 package com.begoingto.springbootapi.api.user;
 
+import com.begoingto.springbootapi.api.account.Account;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,4 +20,5 @@ public class User {
     private String studentCardId;
     private Boolean isStudent;
     private Boolean isDeleted;
+    private List<Account> accounts;
 }
