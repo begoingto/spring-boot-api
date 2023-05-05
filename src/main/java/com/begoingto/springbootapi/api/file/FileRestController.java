@@ -3,10 +3,7 @@ package com.begoingto.springbootapi.api.file;
 import com.begoingto.springbootapi.base.BaseRest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -18,6 +15,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FileRestController {
     private final FileService fileService;
+
+    @GetMapping
+    public BaseRest<?> get(){
+        List<FileDto> fileDtoList = fileService.getAllFile();
+        return BaseRest.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("File has been got all.")
+                .timestamp(LocalDateTime.now())
+                .data(fileDtoList)
+                .build();
+    }
+
     @PostMapping
     public BaseRest<?> uploadSingle(@RequestPart MultipartFile file){
         FileDto fileDto= fileService.uploadSingle(file);

@@ -18,4 +18,6 @@ public interface FileService {
      * @return List<FileDto>
      */
     List<FileDto> multipleUpload(List<MultipartFile> files);
+
+    List<FileDto> getAllFile();
 }

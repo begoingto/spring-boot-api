@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,6 +51,27 @@ public class FileServiceImpl implements FileService{
         for (MultipartFile file : files){
             fileDtoList.add(this.uploadSingle(file));
         }
+        return fileDtoList;
+    }
+
+    @Override
+    public List<FileDto> getAllFile() {
+        List<FileDto> fileDtoList = new ArrayList<>();
+
+        File folder = new File(this.fileServerPath);
+        File[] files = folder.listFiles();
+
+        for (File file : files){
+            if (file.isFile()){
+                String name = file.getName();
+                String url = this.baseUrl + name;
+                int lastIndex = name.lastIndexOf('.');
+                String ext = name.substring(lastIndex+1);
+                long size = file.length();
+                fileDtoList.add(new FileDto(name, url, ext, size));
+            }
+        }
+
         return fileDtoList;
     }
 }
