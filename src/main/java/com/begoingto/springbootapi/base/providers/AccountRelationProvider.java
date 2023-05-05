@@ -4,7 +4,6 @@ import com.begoingto.springbootapi.api.account.Account;
 import com.begoingto.springbootapi.api.account.AccountProvider;
 import com.begoingto.springbootapi.api.accountype.AccountType;
 import org.apache.ibatis.annotations.*;
-
 import java.util.List;
 
 @Mapper
