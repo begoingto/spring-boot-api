@@ -14,7 +14,6 @@ import java.util.Optional;
 @Repository
 @Mapper
 public interface UserMapper extends AccountRelationProvider {
-
     @SelectProvider(type = UserProvider.class, method = "buildSelectSql")
     @Results(id = "userResult", value = {
             @Result(column = "id",property = "id"),
