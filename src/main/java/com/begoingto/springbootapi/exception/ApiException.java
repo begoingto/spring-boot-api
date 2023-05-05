@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.reflect.Field;
@@ -53,6 +54,18 @@ public class ApiException {
                 .message("Something when wrong...!, please check.")
                 .timestamp(LocalDateTime.now())
                 .errors(e.getReason())
+                .build();
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public BaseError<?> handleMaxFileSize(MaxUploadSizeExceededException e){
+        return BaseError.builder()
+                .status(false)
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .message("Wrong file size, it should be smaller than 1024KB")
+                .timestamp(LocalDateTime.now())
+                .errors(e.getMessage())
                 .build();
     }
 }
