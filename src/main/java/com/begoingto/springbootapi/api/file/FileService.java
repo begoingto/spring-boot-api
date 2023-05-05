@@ -20,4 +20,6 @@ public interface FileService {
     List<FileDto> multipleUpload(List<MultipartFile> files);
 
     List<FileDto> getAllFile();
+
+    FileDto deleteByName(String filename);
 }

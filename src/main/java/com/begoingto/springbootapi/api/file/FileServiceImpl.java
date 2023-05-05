@@ -74,4 +74,16 @@ public class FileServiceImpl implements FileService{
 
         return fileDtoList;
     }
+
+    @Override
+    public FileDto deleteByName(String filename) {
+
+        FileDto fileDto = this.getAllFile().stream()
+                .filter(fileDto1 -> fileDto1.name().equalsIgnoreCase(filename))
+                .findFirst().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "File not be found, please try gain..."));
+
+        File file = new File(this.fileServerPath, filename);
+        file.delete();
+        return fileDto;
+    }
 }
