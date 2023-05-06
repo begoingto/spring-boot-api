@@ -32,7 +32,7 @@ public class FileServiceImpl implements FileService{
         int index = file.getOriginalFilename().lastIndexOf('.');
         String ext = file.getOriginalFilename().substring(index+1);
         String uuid = UUID.randomUUID().toString();
-        long size = file.getSize();
+        String size = String.valueOf(file.getSize()/1024).concat(" KB");
         String newFile = String.format("%s%s%s",uuid,".",ext);
         String url = String.format("%s/files/%s",baseUrl,newFile);
 
@@ -64,10 +64,10 @@ public class FileServiceImpl implements FileService{
         for (File file : files){
             if (file.isFile()){
                 String name = file.getName();
-                String url = this.baseUrl + name;
+                String url = this.baseUrl+ "/files/" + name;
                 int lastIndex = name.lastIndexOf('.');
                 String ext = name.substring(lastIndex+1);
-                long size = file.length();
+                String size = String.valueOf(file.length()/1024).concat(" KB");
                 fileDtoList.add(new FileDto(name, url, ext, size));
             }
         }
@@ -83,7 +83,14 @@ public class FileServiceImpl implements FileService{
                 .findFirst().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "File not be found, please try gain..."));
 
         File file = new File(this.fileServerPath, filename);
-        file.delete();
+        boolean delete = file.delete();
         return fileDto;
+    }
+
+    @Override
+    public boolean deleteAllFile() {
+        if (this.getAllFile().isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND,"File is empty.");
+        this.getAllFile().forEach(fileDto -> this.deleteByName(fileDto.name()));
+        return true;
     }
 }

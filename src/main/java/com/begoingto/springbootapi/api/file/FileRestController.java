@@ -40,6 +40,18 @@ public class FileRestController {
                 .build();
     }
 
+    @DeleteMapping
+    public BaseRest<?> deleteAllFile(){
+        boolean deleted = fileService.deleteAllFile();
+        return BaseRest.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("File has been deleted.")
+                .timestamp(LocalDateTime.now())
+                .data(deleted)
+                .build();
+    }
+
     @PostMapping
     public BaseRest<?> uploadSingle(@RequestPart MultipartFile file){
         FileDto fileDto= fileService.uploadSingle(file);

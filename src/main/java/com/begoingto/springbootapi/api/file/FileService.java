@@ -19,7 +19,22 @@ public interface FileService {
      */
     List<FileDto> multipleUpload(List<MultipartFile> files);
 
+    /**
+     *  this method to get all file in directory
+     * @return List<FileDto>
+     */
     List<FileDto> getAllFile();
 
+    /**
+     * The method use to delete file within directory by name of file
+     * @param filename it's parameter of file name
+     * @return FileDto
+     */
     FileDto deleteByName(String filename);
+
+    /**
+     *  the method using to delete all file within directory
+     * @return boolean
+     */
+    boolean deleteAllFile();
 }
