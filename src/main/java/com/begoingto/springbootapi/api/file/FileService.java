@@ -45,4 +45,7 @@ public interface FileService {
      * @return FileDto
      */
     Resource downloadFile(String filename);
+
+    Resource fileByNameV2(String name);
+    Resource donwloadFileV2(String name);
 }

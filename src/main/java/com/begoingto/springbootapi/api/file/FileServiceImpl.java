@@ -1,5 +1,7 @@
 package com.begoingto.springbootapi.api.file;
 
+import com.begoingto.springbootapi.util.FileUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
@@ -18,6 +20,7 @@ import java.util.UUID;
 
 @Service
 public class FileServiceImpl implements FileService{
+    private FileUtil fileUtil;
 
     @Value("${file.server_path}")
     private String fileServerPath;
@@ -27,6 +30,13 @@ public class FileServiceImpl implements FileService{
 
     @Value("${file.base_url}")
     private String baseUrl;
+
+
+    @Autowired
+    private void setFileUtil(FileUtil fileUtil){
+        this.fileUtil =fileUtil;
+    }
+
 
     @Override
     public FileDto uploadSingle(MultipartFile file) {
@@ -100,6 +110,16 @@ public class FileServiceImpl implements FileService{
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Not found file");
         }
         return resource;
+    }
+
+    @Override
+    public Resource fileByNameV2(String name) {
+        return this.fileUtil.findByName(name);
+    }
+
+    @Override
+    public Resource donwloadFileV2(String name) {
+        return this.fileUtil.findByName(name);
     }
 
     private FileDto getFileDtoByName(String filename) {

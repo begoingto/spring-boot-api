@@ -2,7 +2,6 @@ package com.begoingto.springbootapi.api.file;
 
 import com.begoingto.springbootapi.base.BaseRest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -42,8 +41,6 @@ public class FileRestController {
                 .build();
     }
 
-    @Value("${file.server_path}")
-    private String fileServerPath;
     @GetMapping("/download/{filename}")
     public ResponseEntity<?> downloadFile(@PathVariable String filename){
         Resource resource = fileService.downloadFile(filename);
