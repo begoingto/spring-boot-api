@@ -1,6 +1,8 @@
 package com.begoingto.springbootapi.api.file;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.PathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,14 +37,15 @@ public class FileServiceImpl implements FileService{
         String size = String.valueOf(file.getSize()/1024).concat(" KB");
         String newFile = String.format("%s%s%s",uuid,".",ext);
         String url = String.format("%s/files/%s",baseUrl,newFile);
+        String download = baseUrl + "/api/v1/files/download/" + newFile;
 
-        Path paths = Paths.get(fileServerPath + newFile);
+        Path paths = Paths.get(fileServerPath+"/"+ newFile);
         try {
             Files.copy(file.getInputStream(),paths);
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"upload file failed, please contact your self.");
         }
-        return new FileDto(newFile,url,ext,size);
+        return new FileDto(newFile,url,ext,size,download);
     }
 
     @Override
@@ -68,7 +71,8 @@ public class FileServiceImpl implements FileService{
                 int lastIndex = name.lastIndexOf('.');
                 String ext = name.substring(lastIndex+1);
                 String size = String.valueOf(file.length()/1024).concat(" KB");
-                fileDtoList.add(new FileDto(name, url, ext, size));
+                String download = baseUrl + "/api/v1/files/download/" + name;
+                fileDtoList.add(new FileDto(name, url, ext, size,download));
             }
         }
 
@@ -77,11 +81,7 @@ public class FileServiceImpl implements FileService{
 
     @Override
     public FileDto deleteByName(String filename) {
-
-        FileDto fileDto = this.getAllFile().stream()
-                .filter(fileDto1 -> fileDto1.name().equalsIgnoreCase(filename))
-                .findFirst().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "File not be found, please try gain..."));
-
+        FileDto fileDto = getFileDtoByName(filename);
         File file = new File(this.fileServerPath, filename);
         boolean delete = file.delete();
         return fileDto;
@@ -92,5 +92,21 @@ public class FileServiceImpl implements FileService{
         if (this.getAllFile().isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND,"File is empty.");
         this.getAllFile().forEach(fileDto -> this.deleteByName(fileDto.name()));
         return true;
+    }
+
+    @Override
+    public Resource downloadFile(String filename) {
+        Resource resource = new PathResource(fileServerPath + filename);
+        if (!resource.exists() || !resource.isReadable()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Not found file");
+        }
+        return resource;
+    }
+
+    private FileDto getFileDtoByName(String filename) {
+        FileDto fileDto = this.getAllFile().stream()
+                .filter(fileDto1 -> fileDto1.name().equalsIgnoreCase(filename))
+                .findFirst().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "File not be found, please try gain..."));
+        return fileDto;
     }
 }

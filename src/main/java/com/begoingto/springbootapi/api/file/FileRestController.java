@@ -2,11 +2,17 @@ package com.begoingto.springbootapi.api.file;
 
 import com.begoingto.springbootapi.base.BaseRest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDate;
+import java.io.File;
+import java.io.FileInputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,6 +44,16 @@ public class FileRestController {
                 .timestamp(LocalDateTime.now())
                 .data(fileDto)
                 .build();
+    }
+
+    @Value("${file.server_path}")
+    private String fileServerPath;
+    @GetMapping("/download/{filename}")
+    public ResponseEntity<?> downloadFile(@PathVariable String filename){
+        Resource resource = fileService.downloadFile(filename);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,String.format("attachment; filename=\"%s\"",resource.getFilename()))
+                .body(resource);
     }
 
     @DeleteMapping

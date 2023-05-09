@@ -1,5 +1,6 @@
 package com.begoingto.springbootapi.api.file;
 
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -37,4 +38,11 @@ public interface FileService {
      * @return boolean
      */
     boolean deleteAllFile();
+
+    /**
+     * Download file by name
+     * @param filename passing parameter
+     * @return FileDto
+     */
+    Resource downloadFile(String filename);
 }
