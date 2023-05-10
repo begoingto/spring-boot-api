@@ -113,12 +113,19 @@ public class FileServiceImpl implements FileService{
     }
 
     @Override
-    public Resource fileByNameV2(String name) {
-        return this.fileUtil.findByName(name);
+    public FileDto fileByNameV2(String name) throws IOException {
+        Resource resource = this.fileUtil.findByName(name);
+        String filename = resource.getFilename();
+        return FileDto.builder()
+                .name(filename)
+                .extension(fileUtil.getExtension(filename))
+                .url(fileUtil.getBaseUrl().concat("/files/").concat(name))
+                .size(fileUtil.sizeToKb(resource.contentLength()))
+                .build();
     }
 
     @Override
-    public Resource donwloadFileV2(String name) {
+    public Resource downloadFileV2(String name) {
         return this.fileUtil.findByName(name);
     }
 

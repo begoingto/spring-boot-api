@@ -1,7 +1,8 @@
 package com.begoingto.springbootapi.api.file;
 
-import jakarta.annotation.Nullable;
+import lombok.Builder;
 
+@Builder
 public record FileDto(
         String name,
         String url,

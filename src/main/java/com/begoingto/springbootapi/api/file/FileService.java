@@ -3,6 +3,7 @@ package com.begoingto.springbootapi.api.file;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface FileService {
@@ -46,6 +47,6 @@ public interface FileService {
      */
     Resource downloadFile(String filename);
 
-    Resource fileByNameV2(String name);
-    Resource donwloadFileV2(String name);
+    FileDto fileByNameV2(String name) throws IOException;
+    Resource downloadFileV2(String name);
 }

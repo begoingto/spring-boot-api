@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/api/v2/files")
 @RequiredArgsConstructor
@@ -22,14 +24,8 @@ public class FileRestV2Controller {
     private String base_url;
 
     @GetMapping("/{filename}")
-    public BaseRest<?> findByName(@PathVariable String filename){
-        Resource resource = fileService.fileByNameV2(filename);
-        String name = resource.getFilename();
-        String url = base_url + "/files/"+ name;
-        String ext = "";
-        String size = "";
-        String download = "";
-        FileDto fileDto = new FileDto(name,url,ext,size,download);
+    public BaseRest<?> findByName(@PathVariable String filename) throws IOException {
+        FileDto fileDto = fileService.fileByNameV2(filename);
         return BaseRest.builder()
                 .status(true)
                 .code(HttpStatus.OK.value())
@@ -40,7 +36,7 @@ public class FileRestV2Controller {
 
     @GetMapping("/download/{filename}")
     public ResponseEntity<?> downloadFile(@PathVariable String filename){
-        Resource resource = fileService.donwloadFileV2(filename);
+        Resource resource = fileService.downloadFileV2(filename);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header("Content-Disposition",String.format("attachment;filename=\"%s\"",resource.getFilename()))
