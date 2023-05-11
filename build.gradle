@@ -36,6 +36,9 @@ dependencies {
     // pagination
     implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:1.4.6'
 
+    // security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
 }
 
 tasks.named('test') {
