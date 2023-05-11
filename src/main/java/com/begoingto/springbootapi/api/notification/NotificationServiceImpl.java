@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -34,15 +35,19 @@ public class NotificationServiceImpl implements NotificationService{
         httpHeaders.set("Authorization", "Basic "+ apiKey);
         httpHeaders.set("Content-Type", "application/json");
 
-        HttpEntity<NotificationDto> requestBody = new HttpEntity<>(notificationDto,httpHeaders);
+        NotificationDto body = NotificationDto.builder()
+                .appId(appId)
+                .includedSegments(notificationDto.includedSegments())
+                .contents(notificationDto.contents())
+                .build();
+
+
+        HttpEntity<NotificationDto> requestBody = new HttpEntity<>(body,httpHeaders);
 
         ResponseEntity<?> response = restTemplate.postForEntity(
                 "https://onesignal.com/api/v1/notifications",
                 requestBody,
                 Map.class);
-        System.out.println(response.getBody());
-        System.out.println(apiKey);
-
-        return false;
+        return response.getStatusCode().equals(HttpStatus.OK);
     }
 }
