@@ -1,5 +1,6 @@
 package com.begoingto.springbootapi.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,12 +18,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
-
-    @Bean
-    public PasswordEncoder encoder(){
-        return new BCryptPasswordEncoder();
-    }
+    private final PasswordEncoder encoder;
 
     // Define in-memory user
     @Bean
@@ -31,18 +29,18 @@ public class SecurityConfig {
         UserDetails admin = User.builder()
                 .username("admin")
 //                .password("{noop}123")
-                .password(encoder().encode("123"))
+                .password(encoder.encode("123"))
                 .roles("ADMIN")
                 .build();
         UserDetails goldUser = User.builder()
                 .username("gold")
-                .password(encoder().encode("123"))
+                .password(encoder.encode("123"))
                 //.password("{noop}123")
                 .roles("ACCOUNT")
                 .build();
         UserDetails user = User.builder()
                 .username("user")
-                .password(encoder().encode("123"))
+                .password(encoder.encode("123"))
                 //.password("{noop}123")
                 .roles("USER")
                 .build();

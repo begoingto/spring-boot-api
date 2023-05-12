@@ -29,7 +29,7 @@ dependencies {
     // mapstruct with lombok
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
-    implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 
@@ -38,6 +38,12 @@ dependencies {
 
     // security
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // Template engin
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
 }
 

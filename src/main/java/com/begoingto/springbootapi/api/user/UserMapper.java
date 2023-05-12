@@ -2,6 +2,7 @@ package com.begoingto.springbootapi.api.user;
 
 import com.begoingto.springbootapi.api.account.Account;
 import com.begoingto.springbootapi.api.accountype.AccountType;
+import com.begoingto.springbootapi.api.auth.web.RegisterDto;
 import com.begoingto.springbootapi.api.user.web.Filters;
 import com.begoingto.springbootapi.base.providers.AccountRelationProvider;
 import org.apache.ibatis.annotations.*;

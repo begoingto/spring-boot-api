@@ -1,5 +1,6 @@
 package com.begoingto.springbootapi.api.user;
 
+import com.begoingto.springbootapi.api.auth.web.RegisterDto;
 import com.begoingto.springbootapi.api.user.web.CreateUserDto;
 import com.begoingto.springbootapi.api.user.web.UpdateUserDto;
 import com.begoingto.springbootapi.api.user.web.UserDto;
@@ -14,4 +15,6 @@ public interface UserMapStruct {
     User userUpdateDtoToUser(UpdateUserDto updateUserDto);
     User userToUserDto(UserDto user);
     PageInfo<UserDto> userPageInfoToUserDtoPageInfo(PageInfo<User> userPageInfo);
+
+    User registerDtoToUser(RegisterDto registerDto);
 }
