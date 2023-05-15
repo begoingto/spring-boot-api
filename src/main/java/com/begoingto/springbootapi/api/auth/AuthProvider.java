@@ -14,4 +14,30 @@ public class AuthProvider
             VALUES("is_deleted","FALSE");
         }}.toString();
     }
+
+    public String buildSelectByEmailAndVerifiedCodeSql(){
+        return new SQL(){{
+            SELECT("*");
+            FROM(TABLE);
+            WHERE("email=#{email}","verified_code=#{code}");
+        }}.toString();
+    }
+
+    public String buildUpdateIsVerifyStatusSql(){
+        return new SQL(){{
+            UPDATE(TABLE);
+            SET("is_verified=TRUE");
+            WHERE("email=#{email}","verified_code=#{code}");
+        }}.toString();
+    }
+
+
+    public String buildUpdateVerifiedCodeSql(){
+        return new SQL(){{
+            UPDATE(TABLE);
+            SET("verified_code=#{code}");
+            WHERE("email=#{email}");
+        }}.toString();
+    }
+
 }

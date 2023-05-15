@@ -8,6 +8,7 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ public class AuthServiceImpl implements AuthService {
     private PasswordEncoder encoder;
 
     private final MailUtil mailUtil;
+
+    @Value("${spring.mail.username}")
+     private String appMail;
 
     @Autowired
     void setEncoder(PasswordEncoder encoder){
@@ -48,11 +52,18 @@ public class AuthServiceImpl implements AuthService {
         User user  = authMapper.selectByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Email not found."));
 
-        user.setVerifiedCode(UUID.randomUUID().toString());
+        String verifiedCode = UUID.randomUUID().toString();
+
+        if (authMapper.updateVerifiedCode(email, verifiedCode)){
+            user.setVerifiedCode(verifiedCode);
+        } else {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"User cannot be verify.");
+        }
+
 
         MailUtil.Meta<?> meta  = MailUtil.Meta.builder()
                 .to(email)
-                .from("begoingto.me@gamil.com")
+                .from(appMail)
                 .subject("Account Verify")
                 .templateUrl("mail/verify")
                 .data(user)
@@ -61,6 +72,15 @@ public class AuthServiceImpl implements AuthService {
             mailUtil.send(meta);
         } catch (MessagingException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage());
+        }
+    }
+
+    @Override
+    public void checkVerify(String email, String code) {
+        User user  = authMapper.selectByEmailAndVerifiedCode(email,code)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Email not found."));
+        if (!user.getIsVerified()){
+            authMapper.updateIsVerifyStatus(email,code);
         }
     }
 }

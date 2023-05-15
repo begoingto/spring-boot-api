@@ -40,4 +40,18 @@ public class AuthRestController {
                 .data(email)
                 .build();
     }
+
+    @GetMapping("/check-verify")
+    public BaseRest<?> checkVerify(@RequestParam String email, @RequestParam String verifiedCode){
+
+        authService.checkVerify(email,verifiedCode);
+
+        return BaseRest.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("You have been verified successfully.")
+                .timestamp(LocalDateTime.now())
+                .data(email)
+                .build();
+    }
 }

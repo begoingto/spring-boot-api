@@ -13,7 +13,7 @@ public class DevOpsApi {
         SpringApplication.run(DevOpsApi.class, args);
     }
 
-    @GetMapping("/test")
+    @GetMapping("/mail")
     public String sendMail(){
         return "mail/verify";
     }
