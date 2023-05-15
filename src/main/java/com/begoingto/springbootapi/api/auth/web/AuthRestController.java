@@ -1,5 +1,6 @@
-package com.begoingto.springbootapi.api.auth;
+package com.begoingto.springbootapi.api.auth.web;
 
+import com.begoingto.springbootapi.api.auth.AuthService;
 import com.begoingto.springbootapi.api.auth.web.RegisterDto;
 import com.begoingto.springbootapi.base.BaseRest;
 import jakarta.validation.Valid;
@@ -31,6 +32,12 @@ public class AuthRestController {
     @PostMapping("/verify")
     public BaseRest<?> verify(@RequestParam String email){
         authService.verify(email);
-        return null;
+        return BaseRest.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("You have been verified successfully.")
+                .timestamp(LocalDateTime.now())
+                .data(email)
+                .build();
     }
 }

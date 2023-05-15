@@ -41,10 +41,12 @@ public class AuthServiceImpl implements AuthService {
         authMapper.register(user);
     }
 
+
     @Override
     public void verify(String email) {
 
-        User user  = authMapper.selectByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Email not found."));
+        User user  = authMapper.selectByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Email not found."));
 
         user.setVerifiedCode(UUID.randomUUID().toString());
 
@@ -58,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             mailUtil.send(meta);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage());
         }
     }
 }

@@ -16,6 +16,6 @@ public interface AuthMapper {
     @InsertProvider(type = AuthProvider.class, method = "buildRegisterSql")
     void register(@Param("u") User user);
 
-    @Select("SELECT * FROM users WHERE email=#{e}")
+    @Select("SELECT * FROM users WHERE email=#{e} AND is_deleted=FALSE")
     Optional<User> selectByEmail(@Param("e") String email);
 }

@@ -41,7 +41,7 @@ public class MailUtil {
         // Set template engin
         Context context = new Context();
         context.setVariable("data", meta.data);
-        String htmlTemplate = templateEngine.process("mail/verify",context);
+        String htmlTemplate = templateEngine.process(meta.templateUrl,context);
 
         //  prepare template
         helper.setText(htmlTemplate,true);
