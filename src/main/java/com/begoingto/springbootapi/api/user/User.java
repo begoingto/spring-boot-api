@@ -1,6 +1,7 @@
 package com.begoingto.springbootapi.api.user;
 
 import com.begoingto.springbootapi.api.account.Account;
+import com.begoingto.springbootapi.api.auth.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,4 +28,6 @@ public class User {
     private String password;
     private Boolean isVerified;
     private String verifiedCode;
+
+    private List<Role> roles;
 }

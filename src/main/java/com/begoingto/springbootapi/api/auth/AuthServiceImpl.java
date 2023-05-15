@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
+//@Transactional
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -35,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
+    @Transactional
     @Override
     public void register(RegisterDto registerDto) {
         User user  = userMapStruct.registerDtoToUser(registerDto);
@@ -42,7 +45,14 @@ public class AuthServiceImpl implements AuthService {
         user.setIsVerified(false);
 
         log.info("User: {}", user.getEmail());
-        authMapper.register(user);
+
+        if (authMapper.register(user)){
+            // Create role
+            for (Integer roleId: registerDto.roleIds()){
+                authMapper.createUserRole(user.getId(),roleId);
+            }
+        }
+
     }
 
 

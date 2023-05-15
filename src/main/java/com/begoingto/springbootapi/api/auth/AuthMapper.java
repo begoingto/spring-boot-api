@@ -12,7 +12,11 @@ import java.util.Optional;
 public interface AuthMapper {
 
     @InsertProvider(type = AuthProvider.class, method = "buildRegisterSql")
-    void register(@Param("u") User user);
+    @Options(useGeneratedKeys = true,keyColumn = "id",keyProperty = "id")
+    boolean register(@Param("u") User user);
+
+    @InsertProvider(type = AuthProvider.class, method = "buildRegisterCreateUserRoleSql")
+    void createUserRole(@Param("userId") Integer userId, @Param("roleId") Integer roleId);
 
     @Select("SELECT * FROM users WHERE email=#{e} AND is_deleted=FALSE")
     @Results(id = "authResult", value = {
@@ -20,9 +24,14 @@ public interface AuthMapper {
             @Result(column = "student_card_id",property = "studentCardId"),
             @Result(column = "is_student",property = "isStudent"),
             @Result(column = "is_verified",property = "isVerified"),
-            @Result(column = "verified_code",property = "verifiedCode")
+            @Result(column = "verified_code",property = "verifiedCode"),
+            @Result(column = "id",property = "roles",many = @Many(select = "loadUserRoles"))
     })
     Optional<User> selectByEmail(@Param("e") String email);
+
+    @Select("SELECT * FROM users WHERE email=#{e} AND is_deleted=FALSE AND is_verified=TRUE")
+    @ResultMap("authResult")
+    Optional<User> loadUserByUsername(@Param("e") String email);
 
     @SelectProvider(type = AuthProvider.class, method = "buildSelectByEmailAndVerifiedCodeSql")
     @ResultMap("authResult")
@@ -33,4 +42,8 @@ public interface AuthMapper {
 
     @UpdateProvider(type = AuthProvider.class, method = "buildUpdateVerifiedCodeSql")
     boolean updateVerifiedCode(@Param("email") String email,@Param("code") String verifiedCode);
+
+
+    @SelectProvider(type = AuthProvider.class, method = "buildLoadUserRolesSql")
+    List<Role> loadUserRoles(@Param("id") Integer id);
 }

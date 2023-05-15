@@ -15,6 +15,14 @@ public class AuthProvider
         }}.toString();
     }
 
+    public String buildRegisterCreateUserRoleSql(){
+        return new SQL(){{
+            INSERT_INTO("users_roles");
+            VALUES("user_id","#{userId}");
+            VALUES("role_id","#{roleId}");
+        }}.toString();
+    }
+
     public String buildSelectByEmailAndVerifiedCodeSql(){
         return new SQL(){{
             SELECT("*");
@@ -37,6 +45,16 @@ public class AuthProvider
             UPDATE(TABLE);
             SET("verified_code=#{code}");
             WHERE("email=#{email}");
+        }}.toString();
+    }
+
+
+    public String buildLoadUserRolesSql(){
+        return new SQL(){{
+            SELECT("r.id,r.name");
+            FROM("roles AS R");
+            INNER_JOIN("users_roles as ur ON ur.role_id=r.id");
+            WHERE("ur.user_id=#{id}");
         }}.toString();
     }
 

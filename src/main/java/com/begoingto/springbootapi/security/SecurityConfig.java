@@ -3,6 +3,8 @@ package com.begoingto.springbootapi.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,9 +23,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final PasswordEncoder encoder;
+    private final UserDetailsServiceImpl userDetailsService;
 
     // Define in-memory user
-    @Bean
+    /* @Bean
     public UserDetailsService userDetailsService(){
         UserDetailsManager userDetailsManager = new InMemoryUserDetailsManager();
         UserDetails admin = User.builder()
@@ -48,6 +51,15 @@ public class SecurityConfig {
         userDetailsManager.createUser(user);
         userDetailsManager.createUser(goldUser);
         return userDetailsManager;
+    }*/
+
+    // Define user auth with jdbc db
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider(){
+        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
+        auth.setUserDetailsService(userDetailsService);
+        auth.setPasswordEncoder(encoder);
+        return auth;
     }
 
     @Bean
@@ -59,7 +71,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(request -> {
             //Authorize URL mapping
             request.requestMatchers("/api/v1/users/**").hasRole("ADMIN");
-            request.requestMatchers("/api/v1/account-types/**","/api/v1/files/**").hasAnyRole("ACCOUNT","USER");
+            request.requestMatchers("/api/v1/account-types/**","/api/v1/files/**").hasAnyRole("CUSTOMER","SYSTEM");
             request.anyRequest().permitAll();
         });
 
