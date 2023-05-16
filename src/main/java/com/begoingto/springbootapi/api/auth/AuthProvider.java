@@ -52,7 +52,7 @@ public class AuthProvider
     public String buildLoadUserRolesSql(){
         return new SQL(){{
             SELECT("r.id,r.name");
-            FROM("roles AS R");
+            FROM("roles AS r");
             INNER_JOIN("users_roles as ur ON ur.role_id=r.id");
             WHERE("ur.user_id=#{id}");
         }}.toString();

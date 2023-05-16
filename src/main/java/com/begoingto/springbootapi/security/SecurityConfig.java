@@ -3,6 +3,7 @@ package com.begoingto.springbootapi.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -69,10 +70,18 @@ public class SecurityConfig {
 //        http.csrf(token -> token.disable());
 
         http.authorizeHttpRequests(request -> {
+            // any authenticate can access Any Role
+            //request.requestMatchers("/api/v1/users/**").authenticated();
+
             //Authorize URL mapping
-            request.requestMatchers("/api/v1/users/**").hasRole("ADMIN");
+            /*request.requestMatchers("/api/v1/users/**").hasRole("ADMIN");
             request.requestMatchers("/api/v1/account-types/**","/api/v1/files/**").hasAnyRole("CUSTOMER","SYSTEM");
-            request.anyRequest().permitAll();
+            request.anyRequest().permitAll();*/
+
+            request.requestMatchers("/api/v1/auth/**").permitAll();
+            request.requestMatchers(HttpMethod.GET,"/api/v1/users/**").hasAnyRole("ADMIN");
+            request.requestMatchers(HttpMethod.POST,"/api/v1/users/**").hasAnyRole("SYSTEM");
+            request.anyRequest().authenticated();
         });
 
 
