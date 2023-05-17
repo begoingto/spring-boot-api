@@ -53,4 +53,7 @@ public interface UserMapper extends AccountRelationProvider {
 
     @UpdateProvider(type = UserProvider.class,method = "buildUpdateIsDeletedById")
     void updateIsDeletedById(@Param("id") Integer id, @Param("status") boolean status);
+
+    @Select("SELECT EXISTS(SELECT * FROM users WHERE email=#{email})")
+    boolean existByEmail(String email);
 }

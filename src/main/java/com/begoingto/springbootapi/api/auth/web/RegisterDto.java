@@ -1,5 +1,6 @@
 package com.begoingto.springbootapi.api.auth.web;
 
+import com.begoingto.springbootapi.api.user.validator.EmailUnique;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,6 +8,7 @@ import java.util.List;
 
 public record RegisterDto(
         @NotBlank(message = "The field email is required.")
+        @EmailUnique
         @Email
         String email,
         @NotBlank(message = "The field password is required.")
