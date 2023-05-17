@@ -56,4 +56,7 @@ public interface UserMapper extends AccountRelationProvider {
 
     @Select("SELECT EXISTS(SELECT * FROM users WHERE email=#{email})")
     boolean existByEmail(String email);
+
+    @Select("SELECT EXISTS(SELECT * FROM roles WHERE id=#{roleId})")
+    boolean checkRoleId(Integer roleId);
 }

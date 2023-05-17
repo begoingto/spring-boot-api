@@ -1,4 +1,4 @@
-package com.begoingto.springbootapi.api.user.validator;
+package com.begoingto.springbootapi.api.user.validator.email;
 
 import com.begoingto.springbootapi.api.user.UserMapper;
 import jakarta.validation.ConstraintValidator;
