@@ -29,6 +29,20 @@ public class AuthRestController {
                 .build();
     }
 
+    @PostMapping("/login")
+    public BaseRest<?> login(@RequestBody LoginDto loginDto){
+
+        LoginResponse loginResponse = authService.userLogin(loginDto);
+
+        return BaseRest.builder()
+                .status(true)
+                .code(HttpStatus.OK.value())
+                .message("You have been registered successfully.")
+                .timestamp(LocalDateTime.now())
+                .data(loginResponse)
+                .build();
+    }
+
     @PostMapping("/verify")
     public BaseRest<?> verify(@RequestParam String email){
         authService.verify(email);

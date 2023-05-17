@@ -88,7 +88,7 @@ public class SecurityConfig {
         //Security mechanism
         http.httpBasic();
 
-
+        // configure Session Auth to stateless By default is stateful
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // make security stateless
 //                .formLog/in(); // using for normal web without api

@@ -1,5 +1,7 @@
 package com.begoingto.springbootapi.api.auth;
 
+import com.begoingto.springbootapi.api.auth.web.LoginDto;
+import com.begoingto.springbootapi.api.auth.web.LoginResponse;
 import com.begoingto.springbootapi.api.auth.web.RegisterDto;
 import com.begoingto.springbootapi.api.user.User;
 import com.begoingto.springbootapi.api.user.UserMapStruct;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Base64;
 import java.util.UUID;
 
 //@Transactional
@@ -92,5 +95,23 @@ public class AuthServiceImpl implements AuthService {
         if (!user.getIsVerified()){
             authMapper.updateIsVerifyStatus(email,code);
         }
+    }
+
+    @Override
+    public LoginResponse userLogin(LoginDto loginDto) {
+        User user  = authMapper.selectByEmail(loginDto.email())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Email not found."));
+
+        if (!encoder.matches(loginDto.password(), user.getPassword())){
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"You are wrong password");
+        }
+
+
+        String encoding = Base64.getEncoder().encodeToString((user + ":" + loginDto.password()).getBytes());
+
+        return LoginResponse.builder()
+                .token(encoding)
+                .user(user)
+                .build();
     }
 }
