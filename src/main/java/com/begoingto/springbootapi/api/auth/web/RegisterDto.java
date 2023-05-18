@@ -2,11 +2,13 @@ package com.begoingto.springbootapi.api.auth.web;
 
 import com.begoingto.springbootapi.api.user.validator.email.EmailUnique;
 import com.begoingto.springbootapi.api.user.validator.password.Password;
+import com.begoingto.springbootapi.api.user.validator.password.PasswordMatch;
 import com.begoingto.springbootapi.api.user.validator.role.RoleIdConstraint;
 import jakarta.validation.constraints.*;
 
 import java.util.List;
 
+@PasswordMatch
 public record RegisterDto(
         @NotBlank(message = "The field email is required.")
         @EmailUnique
