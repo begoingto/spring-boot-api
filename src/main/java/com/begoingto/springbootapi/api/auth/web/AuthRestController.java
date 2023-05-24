@@ -30,7 +30,7 @@ public class AuthRestController {
     }
 
     @PostMapping("/login")
-    public BaseRest<?> login(@RequestBody LoginDto loginDto){
+    public BaseRest<?> login(@Valid @RequestBody LoginDto loginDto){
 
         LoginResponse loginResponse = authService.userLogin(loginDto);
 

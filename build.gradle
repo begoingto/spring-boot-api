@@ -48,6 +48,9 @@ dependencies {
     // passay validator
     implementation 'org.passay:passay:1.6.3'
 
+    //oauth2
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
 }
 
 tasks.named('test') {

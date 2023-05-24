@@ -2,6 +2,7 @@ package com.begoingto.springbootapi.api.user;
 
 import com.begoingto.springbootapi.api.account.Account;
 import com.begoingto.springbootapi.api.accountype.AccountType;
+import com.begoingto.springbootapi.api.auth.Role;
 import com.begoingto.springbootapi.api.auth.web.RegisterDto;
 import com.begoingto.springbootapi.api.user.web.Filters;
 import com.begoingto.springbootapi.base.providers.AccountRelationProvider;
@@ -20,7 +21,8 @@ public interface UserMapper extends AccountRelationProvider {
             @Result(column = "id",property = "id"),
             @Result(column = "student_card_id",property = "studentCardId"),
             @Result(column = "is_student",property = "isStudent"),
-            @Result(column = "id",property = "accounts", javaType = List.class, many = @Many(select = "selectUserAccounts"))
+            @Result(column = "id",property = "accounts", javaType = List.class, many = @Many(select = "selectUserAccounts")),
+            @Result(column = "id",property = "roles", javaType = List.class, many = @Many(select = "selectUserRoles"))
     })
     List<User> select(@Param("f") Filters filters);
 
@@ -59,4 +61,7 @@ public interface UserMapper extends AccountRelationProvider {
 
     @Select("SELECT EXISTS(SELECT * FROM roles WHERE id=#{roleId})")
     boolean checkRoleId(Integer roleId);
+
+    @SelectProvider(type = UserProvider.class, method = "buildSelectUserRoleSql")
+    List<Role> selectUserRoles(Integer id);
 }

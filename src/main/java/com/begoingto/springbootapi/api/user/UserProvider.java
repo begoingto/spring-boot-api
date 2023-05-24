@@ -75,4 +75,13 @@ public class UserProvider {
             WHERE("id = #{id}");
         }}.toString();
     }
+
+    public String buildSelectUserRoleSql(){
+        return new SQL(){{
+            SELECT("*");
+            FROM("roles as r");
+            JOIN("users_roles as ur ON r.id=ur.role_id");
+            WHERE("ur.user_id = #{id}");
+        }}.toString();
+    }
 }

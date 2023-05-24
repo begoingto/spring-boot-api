@@ -12,13 +12,26 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 //@Transactional
 @Service
@@ -28,8 +41,9 @@ public class AuthServiceImpl implements AuthService {
     private final AuthMapper authMapper;
     private final UserMapStruct userMapStruct;
     private PasswordEncoder encoder;
-
     private final MailUtil mailUtil;
+    private final DaoAuthenticationProvider daoAuthenticationProvider;
+    private final JwtEncoder jwtEncoder;
 
     @Value("${spring.mail.username}")
      private String appMail;
@@ -99,18 +113,57 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse userLogin(LoginDto loginDto) {
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(loginDto.email(),loginDto.password());
+
+        authentication = daoAuthenticationProvider.authenticate(authentication);
+
+
+
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>(){{
+//            add(new SimpleGrantedAuthority("WRITE"));
+            add(new SimpleGrantedAuthority("READ"));
+//            add(new SimpleGrantedAuthority("DELETE"));
+//            add(new SimpleGrantedAuthority("UPDATE"));
+//            add(new SimpleGrantedAuthority("FULL_CONTROL"));
+        }};
+
+        // Define scope
+        String scope = authorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(" "));
+
+        Instant now = Instant.now();
+        JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(now)
+                .subject(authentication.getName())
+                .expiresAt(now.plus(1, ChronoUnit.HOURS))
+                .claim("scope", scope)
+                .build();
+
+        String jwtEndCode = this.jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
+
+
         User user  = authMapper.selectByEmail(loginDto.email())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Email not found."));
+
+
+        /*
+        *System.out.println(authentication);
+
+
 
         if (!encoder.matches(loginDto.password(), user.getPassword())){
            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"You are wrong password");
         }
 
-
-        String encoding = Base64.getEncoder().encodeToString((user + ":" + loginDto.password()).getBytes());
+        String basicFormat = authentication.getName()+ ":" + authentication.getCredentials();
+        String encoding = Base64.getEncoder().encodeToString(basicFormat.getBytes());*/
 
         return LoginResponse.builder()
-                .token(encoding)
+                .tokenType("Bearer")
+                .accessToken(jwtEndCode)
                 .user(user)
                 .build();
     }
