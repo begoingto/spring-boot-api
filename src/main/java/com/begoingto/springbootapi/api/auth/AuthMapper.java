@@ -1,5 +1,6 @@
 package com.begoingto.springbootapi.api.auth;
 
+import com.begoingto.springbootapi.api.user.Authority;
 import com.begoingto.springbootapi.api.user.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -33,6 +34,9 @@ public interface AuthMapper {
     @ResultMap("authResult")
     Optional<User> loadUserByUsername(@Param("e") String email);
 
+    @SelectProvider(type = AuthProvider.class, method = "buildLoadUserAuthoritiesSql")
+    List<Authority> loadUserAuthorities(Integer id);
+
     @SelectProvider(type = AuthProvider.class, method = "buildSelectByEmailAndVerifiedCodeSql")
     @ResultMap("authResult")
     Optional<User> selectByEmailAndVerifiedCode(@Param("email") String email,@Param("code") String verifiedCode);
@@ -45,5 +49,6 @@ public interface AuthMapper {
 
 
     @SelectProvider(type = AuthProvider.class, method = "buildLoadUserRolesSql")
+    @Result(column = "id",property = "authorities",many = @Many(select = "loadUserAuthorities"))
     List<Role> loadUserRoles(@Param("id") Integer id);
 }

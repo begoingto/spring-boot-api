@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -35,9 +36,12 @@ import java.util.UUID;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfig {
     private final PasswordEncoder encoder;
     private final UserDetailsServiceImpl userDetailsService;
+    private final CustomerAuthenticationEntryPoint customerAuthenticationEntryPoint;
+    private final CustomJwtAccessDeniedHandler customJwtAccessDeniedHandler;
 
     // Define in-memory user
     /* @Bean
@@ -99,10 +103,15 @@ public class SecurityConfig {
 //            request.requestMatchers(HttpMethod.GET,"/api/v1/users/**").hasAuthority("SCOPE_ROLE_ADMIN");
 //            request.requestMatchers(HttpMethod.POST,"/api/v1/users/**").hasAuthority("SCOPE_ROLE_SYSTEM");
 
-            request.requestMatchers(HttpMethod.GET,"/api/v1/users/**").hasAnyAuthority("SCOPE_READ","SCOPE_FULL_CONTROL");
-            request.requestMatchers(HttpMethod.POST,"/api/v1/users/**").hasAnyAuthority("SCOPE_WRITE","SCOPE_FULL_CONTROL");
-            request.requestMatchers(HttpMethod.PUT,"/api/v1/users/**").hasAnyAuthority("SCOPE_UPDATE","SCOPE_FULL_CONTROL");
-            request.requestMatchers(HttpMethod.DELETE,"/api/v1/users/**").hasAnyAuthority("SCOPE_DELETE","SCOPE_FULL_CONTROL");
+//            request.requestMatchers(HttpMethod.GET,"/api/v1/users/**").hasAnyAuthority("SCOPE_READ","SCOPE_FULL_CONTROL");
+//            request.requestMatchers(HttpMethod.POST,"/api/v1/users/**").hasAnyAuthority("SCOPE_WRITE","SCOPE_FULL_CONTROL");
+//            request.requestMatchers(HttpMethod.PUT,"/api/v1/users/**").hasAnyAuthority("SCOPE_UPDATE","SCOPE_FULL_CONTROL");
+//            request.requestMatchers(HttpMethod.DELETE,"/api/v1/users/**").hasAnyAuthority("SCOPE_DELETE","SCOPE_FULL_CONTROL");
+
+            request.requestMatchers(HttpMethod.GET,"/api/v1/users/**").hasAuthority("SCOPE_user:read");
+            request.requestMatchers(HttpMethod.POST,"/api/v1/users/**").hasAuthority("SCOPE_user:write");
+            request.requestMatchers(HttpMethod.PUT,"/api/v1/users/**").hasAuthority("SCOPE_user:update");
+            request.requestMatchers(HttpMethod.DELETE,"/api/v1/users/**").hasAuthority("SCOPE_user:delete");
             request.anyRequest().authenticated();
         });
 
@@ -116,6 +125,13 @@ public class SecurityConfig {
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // make security stateless
 //                .formLog/in(); // using for normal web without api
+
+
+        // Exception
+        http.exceptionHandling()
+                .accessDeniedHandler(customJwtAccessDeniedHandler)
+                .authenticationEntryPoint(customerAuthenticationEntryPoint);
+
         return http.build();
     }
 

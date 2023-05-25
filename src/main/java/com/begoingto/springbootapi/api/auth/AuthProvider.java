@@ -58,4 +58,13 @@ public class AuthProvider
         }}.toString();
     }
 
+    public String buildLoadUserAuthoritiesSql(){
+        return new SQL(){{
+            SELECT("a.id,a.name");
+            FROM("authorities AS a");
+            INNER_JOIN("roles_authorities as ra ON ra.authority_id=a.id");
+            WHERE("ra.role_id=#{id}");
+        }}.toString();
+    }
+
 }

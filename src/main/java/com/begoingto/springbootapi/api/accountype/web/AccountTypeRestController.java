@@ -6,6 +6,7 @@ import com.begoingto.springbootapi.api.user.web.UserDto;
 import com.begoingto.springbootapi.base.BaseRest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 public class AccountTypeRestController {
     private final AccountTypeService accountTypeService;
     @GetMapping
+    @PreAuthorize("hasAuthority('SCOPE_account:read')")
     public BaseRest<?> findAll(
             @RequestParam(value = "page",defaultValue = "1") int page,
             @RequestParam(value = "limit",defaultValue = "15") int limit

@@ -1,11 +1,16 @@
 package com.begoingto.springbootapi.security;
 
+import com.begoingto.springbootapi.api.auth.Role;
+import com.begoingto.springbootapi.api.user.Authority;
 import com.begoingto.springbootapi.api.user.User;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 
 @Getter
@@ -19,7 +24,20 @@ public class CustomUserDetail implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles();
+
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+        for (Role role: user.getRoles()){
+            authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
+
+            for (Authority authority: role.getAuthorities()){
+                authorities.add(new SimpleGrantedAuthority(authority.getName()));
+            }
+        }
+
+
+
+        return authorities;
     }
 
     @Override

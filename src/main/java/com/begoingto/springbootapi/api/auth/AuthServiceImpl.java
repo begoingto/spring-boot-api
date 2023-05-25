@@ -3,6 +3,7 @@ package com.begoingto.springbootapi.api.auth;
 import com.begoingto.springbootapi.api.auth.web.LoginDto;
 import com.begoingto.springbootapi.api.auth.web.LoginResponse;
 import com.begoingto.springbootapi.api.auth.web.RegisterDto;
+import com.begoingto.springbootapi.api.user.Authority;
 import com.begoingto.springbootapi.api.user.User;
 import com.begoingto.springbootapi.api.user.UserMapStruct;
 import com.begoingto.springbootapi.util.MailUtil;
@@ -120,17 +121,18 @@ public class AuthServiceImpl implements AuthService {
 
 
 
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>(){{
-//            add(new SimpleGrantedAuthority("WRITE"));
-            add(new SimpleGrantedAuthority("READ"));
-//            add(new SimpleGrantedAuthority("DELETE"));
-//            add(new SimpleGrantedAuthority("UPDATE"));
-//            add(new SimpleGrantedAuthority("FULL_CONTROL"));
-        }};
+//        List<SimpleGrantedAuthority> authorities = new ArrayList<>(){{
+////            add(new SimpleGrantedAuthority("WRITE"));
+//            add(new SimpleGrantedAuthority("READ"));
+////            add(new SimpleGrantedAuthority("DELETE"));
+////            add(new SimpleGrantedAuthority("UPDATE"));
+////            add(new SimpleGrantedAuthority("FULL_CONTROL"));
+//        }};
 
         // Define scope
-        String scope = authorities.stream()
+        String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
+                .filter(auth -> !auth.startsWith("ROLE_"))
                 .collect(Collectors.joining(" "));
 
         Instant now = Instant.now();
@@ -148,6 +150,11 @@ public class AuthServiceImpl implements AuthService {
         User user  = authMapper.selectByEmail(loginDto.email())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Email not found."));
 
+//        for (Role role: user.getRoles()){
+//            for (Authority authority: role.getAuthorities()){
+//                System.err.println("Role : "+ role.getName() + " ,Authority: "+ authority.getName());
+//            }
+//        }
 
         /*
         *System.out.println(authentication);
